@@ -92,6 +92,12 @@
 			<version>5.6.2</version>
 		</dependency>
 
+		<!-- Markdown 文档读取依赖-->
+		<dependency>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-markdown-document-reader</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 
 

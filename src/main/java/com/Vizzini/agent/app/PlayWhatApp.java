@@ -2,15 +2,18 @@ package com.Vizzini.agent.app;
 
 import com.Vizzini.agent.advisor.MyLoggerAdvisor;
 import com.Vizzini.agent.advisor.SafeGuardAdvisor;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -92,7 +95,7 @@ public class PlayWhatApp {
 
 
     /**
-     *
+     * 以旅行路线报告返回结果的 AI 进阶对话
      * @param message
      * @param chatId
      * @return
@@ -112,6 +115,33 @@ public class PlayWhatApp {
                 .entity(TravelReport.class);
         log.info("travelReport: {}", travelReport);
         return travelReport;
+    }
+
+
+    @Resource
+    private VectorStore playWhatAppVectorStore;
+
+    /**
+     * 带有知识库问答的 AI 进阶对话
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public String doChatWithRag(String message, String chatId) {
+        ChatResponse chatResponse = chatClient
+                .prompt()
+                .user(message)
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 20))
+                // 开启日志，便于观察效果
+                .advisors(new MyLoggerAdvisor())
+                // 应用知识库问答
+                .advisors(new QuestionAnswerAdvisor(playWhatAppVectorStore))
+                .call()
+                .chatResponse();
+        String content = chatResponse.getResult().getOutput().getText();
+        log.info("content: {}", content);
+        return content;
     }
 
 

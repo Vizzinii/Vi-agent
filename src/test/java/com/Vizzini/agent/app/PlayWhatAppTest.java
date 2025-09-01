@@ -35,10 +35,17 @@ class PlayWhatAppTest {
   @Test
   void doChatWithReport() {
     String chatId = UUID.randomUUID().toString();
-    // 第一轮
     String message = "你好，我是Vizzini。我想进行一次中国西北环线的自驾，请你就旅游路线和城市给我一些建议。";
     PlayWhatApp.TravelReport travelReport = playWhatApp.doChatWithReport(message, chatId);
     Assertions.assertNotNull(travelReport);
+  }
+
+  @Test
+  void doChatWithRag() {
+    String chatId = UUID.randomUUID().toString();
+    String message = "你好，我是Vizzini。我想进行一次陕西山西触摸历史的自驾，请你就旅游路线和城市给我一些建议。";
+    String answer =  playWhatApp.doChatWithRag(message, chatId);
+    Assertions.assertNotNull(answer);
   }
 
 }
