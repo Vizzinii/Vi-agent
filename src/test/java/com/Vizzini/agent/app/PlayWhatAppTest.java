@@ -41,11 +41,18 @@ class PlayWhatAppTest {
   }
 
   @Test
-  void doChatWithRag() {
+  void doChatWithLocalRag() {
     String chatId = UUID.randomUUID().toString();
     String message = "你好，我是Vizzini。我想进行一次陕西山西触摸历史的自驾，请你就旅游路线和城市给我一些建议。";
-    String answer =  playWhatApp.doChatWithRag(message, chatId);
+    String answer =  playWhatApp.doChatWithLocalRag(message, chatId);
     Assertions.assertNotNull(answer);
   }
 
+  @Test
+  void doChatWithRemoteRag() {
+    String chatId = UUID.randomUUID().toString();
+    String message = "你好，我是Vizzini。我想进行一次云南贵州遍览自然风光的自驾，请你就景点和美食给我一些建议。";
+    String answer =  playWhatApp.doChatWithRemoteRag(message, chatId);
+    Assertions.assertNotNull(answer);
+  }
 }
