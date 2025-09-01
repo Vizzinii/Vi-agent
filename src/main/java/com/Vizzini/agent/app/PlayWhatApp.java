@@ -1,6 +1,7 @@
 package com.Vizzini.agent.app;
 
 import com.Vizzini.agent.advisor.MyLoggerAdvisor;
+import com.Vizzini.agent.advisor.SafeGuardAdvisor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,8 @@ public class PlayWhatApp {
                 .defaultSystem(SYSTEM_PROMPT)
                 .defaultAdvisors(
                         new MessageChatMemoryAdvisor(chatMemory),
-                        new MyLoggerAdvisor()
+                        new MyLoggerAdvisor(),
+                        new SafeGuardAdvisor()
                 )
                 .build();
     }
@@ -102,7 +104,7 @@ public class PlayWhatApp {
                 .user(message)
                 .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
                         // 对话记忆的上限
-                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 20))
                 .call()
                 // 当调用 TravelReport.class 时
                 // SpringAI 会让 AI 模型按照 TravelReport 的结构生成 JSON 格式响应
